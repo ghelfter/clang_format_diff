@@ -20,3 +20,28 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+import platform
+
+import PySide2.QtCore
+
+CTRL = 'Control'
+
+if platform.system() == 'Darwin':
+    CTRL = 'Meta'
+
+class FileMenuActions(PySide2.QtCore.QObject):
+    """ Maps the callbacks for the file menu """
+    # Create signals for Qt callbacks
+    open_signal = PySide2.QtCore.Signal()
+
+    def __init__(self):
+        super(FileMenuActions, self).__init__()
+
+        # Connect signals to internal methods for Qt UI operations to call
+        # back into code here
+        self.open_signal.connect(self.file_open)
+
+    def file_open(self):
+        """ Provides functionality to open a file for formatting """
+        print('File->Open called!')

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright 2018 Galen Helfter
 # All rights reserved.
 #
@@ -20,3 +22,56 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+import unittest
+import sys
+import os
+import os.path
+
+# Append source directory so that tests can easily exist outside
+sys.path.append('../src')
+
+import core.log
+
+def contains_line(filepath, line):
+    """ Returns True if the file contains the given line """
+    result = False
+
+    if os.path.isfile(filepath):
+        try:
+            with open(filepath, 'r') as in_file:
+                for input_line in in_file:
+                    if input_line == line:
+                        result = True
+        except:
+            pass
+
+    return result
+
+class TestLog(unittest.TestCase):
+    """ Test the log module in the core library """
+    def test_1_log_create(self):
+        """ Test that log file is created """
+        log_path = './test_log.txt'
+        logger = core.log.Logger(log_path)
+
+        logger.log('Test')
+
+        self.assertTrue(os.path.isfile(log_path))
+
+        os.unlink(log_path)
+
+    def test_2_log_content(self):
+        """ Test that file contains written content """
+        log_path = './test_log.txt'
+        log_statement = 'Test log entry'
+        logger = core.log.Logger(log_path)
+
+        logger.log(log_statement)
+
+        self.assertTrue(contains_line(log_path, log_statement + '\n'))
+
+        os.unlink(log_path)
+
+if __name__ == '__main__':
+    unittest.main()

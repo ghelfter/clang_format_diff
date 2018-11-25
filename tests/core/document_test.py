@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright 2018 Galen Helfter
 # All rights reserved.
 #
@@ -20,3 +22,39 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+import unittest
+import sys
+import os.path
+
+sys.path.append('../src')
+
+import core.document
+
+class TestDocument(unittest.TestCase):
+    """ Tests the document module in the core library """
+    def test_1_is_real(self):
+        """ Test document virtual status """
+
+        # Document with no filepath
+        doc1 = core.document.Document()
+        self.assertTrue(doc1.is_virtual())
+
+        # Document with invalid filepath
+        path1 = 'test_not_valid_file.txt'
+        self.assertFalse(os.path.isfile(path1))
+        doc2 = core.document.Document(path1)
+        self.assertTrue(doc2.is_virtual())
+
+        # Document with valid filepath
+        path2 = 'test_valid_file.txt'
+        with open(path2, 'w') as test_file:
+            pass
+        self.assertTrue(os.path.isfile(path2))
+        doc3 = core.document.Document(path2)
+        self.assertFalse(doc3.is_virtual())
+
+        os.unlink(path2)
+
+if __name__ == '__main__':
+    unittest.main()

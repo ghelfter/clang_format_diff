@@ -20,3 +20,15 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+""" Core operations, mainly used for callbacks from UI events """
+
+import os.path
+
+from .core import Core
+
+def open_directory(directory):
+    """ Opens a target directory, populating the application with the files
+        there """
+    if os.path.isdir(directory):
+        app_core = Core.get_core()

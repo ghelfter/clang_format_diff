@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright 2018 Galen Helfter
 # All rights reserved.
 #
@@ -20,3 +22,47 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+import subprocess
+import sys
+import os.path
+
+def main(argv):
+    retcode = 0
+    python_exe = 'python3'
+
+    libraries = {'core' : ['log', 'document', 'core'],
+                 'core.configure' : ['configuration']}
+
+    success = True
+
+    print('Running program tests\n')
+    print('----------------------------------------------------------------------')
+    print('----------------------------------------------------------------------\n')
+
+    for library in libraries:
+        library_dir = ''
+        for elem in library.split('.'):
+            library_dir = os.path.join(library_dir, elem)
+        for module in libraries[library]:
+            filename = module + '_test.py'
+            python_file = os.path.join(library_dir, filename)
+
+            res = subprocess.call([python_exe, python_file, '-v'])
+
+            if res == 0:
+                print(library + '.' + module + ' tests have passed.\n\n')
+            else:
+                success = False
+                print(library + '.' + module + ' tests have failed.\n\n')
+
+    if success:
+        print('Tests have succeeded.')
+    else:
+        print('Tests have failed.')
+        res = 1
+
+    sys.exit(res)
+
+if __name__ == '__main__':
+    main(sys.argv)

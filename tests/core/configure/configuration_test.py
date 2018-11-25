@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright 2018 Galen Helfter
 # All rights reserved.
 #
@@ -20,3 +22,50 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+import unittest
+import sys
+import os
+
+# Append source directory so that tests can easily exist outside
+sys.path.append('../src')
+
+from core.configure.configuration import Configuration
+
+class TestConfiguration(unittest.TestCase):
+    """ Test the core module in the core library """
+
+    def test_1_fail_load(self):
+        """ Test that configuration fails on empty file """
+        config = Configuration()
+        self.assertFalse(config.load())
+
+    def test_2_open_load(self):
+        """ Test success on an empty file """
+        filepath = './test_config.txt'
+        if os.path.isfile(filepath):
+            os.unlink(filepath)
+
+        # Create file
+        with open(filepath, 'w') as out_file:
+            pass
+
+        self.assertTrue(os.path.isfile(filepath))
+
+        config = Configuration(filepath)
+        self.assertTrue(config.load())
+
+        if os.path.isfile(filepath):
+            os.unlink(filepath)
+
+    def test_3_invalid_file(self):
+        """ Test a file that does not exist """
+        filepath = './test_config.txt'
+        if os.path.isfile(filepath):
+            os.unlink(filepath)
+
+        config = Configuration(filepath)
+        self.assertFalse(config.load())
+
+if __name__ == '__main__':
+    unittest.main()

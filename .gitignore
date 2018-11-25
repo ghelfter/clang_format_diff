@@ -1,0 +1,9 @@
+# Python cache directories
+**/__pycache__
+
+# Vim swap files
+**/*.swp
+
+# Compiled python files and object files
+**/*.pyc
+**/*.o
